@@ -54,11 +54,12 @@ def get(url):
 
 def send(payload):
     while True:
-        r = requests.post(WEBHOOK_URL, json=payload, timeout=20)
+        r = requests.post(WEBHOOK_URL + "?wait=true", json=payload, timeout=20)
         if r.status_code == 429:
             time.sleep(float(r.json().get("retry_after", 2)) + 0.5)
             continue
         r.raise_for_status()
+        print("Discord accepted the message. Channel ID:", r.json().get("channel_id"))
         return
 
 
