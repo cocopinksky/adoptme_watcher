@@ -27,6 +27,7 @@ jobs:
       - name: Run watcher
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          YOUTUBE_CHANNEL_ID: UCVdPM7Dgxm3cHXM2ro__bUg
         run: python adoptme_watcher.py
 
       - name: Save state
