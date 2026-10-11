@@ -8,7 +8,7 @@ Setup:
   export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
   python adoptme_watcher.py
 
-Run it every 5-15 minutes (cron, Task Scheduler, GitHub Actions, etc.).
+Run it every few minutes (cron, Task Scheduler, GitHub Actions, etc.).
 The first run only records what already exists so you don't get flooded;
 pass --post-existing to post the current items instead.
 """
@@ -29,6 +29,7 @@ SITE = "https://www.playadopt.me"
 YOUTUBE_HANDLE_URL = "https://www.youtube.com/@playadoptme"
 STATE_FILE = os.environ.get("STATE_FILE", "state.json")
 EMBED_COLOR = 0xE81F76
+PING_ROLE_ID = os.environ.get("PING_ROLE_ID", "")
 UA = {"User-Agent": "Mozilla/5.0 (compatible; AdoptMeWatcher/1.0)"}
 
 
@@ -53,6 +54,9 @@ def get(url):
 
 
 def send(payload):
+    if PING_ROLE_ID:
+        payload["content"] = f"<@&{PING_ROLE_ID}> " + payload.get("content", "")
+        payload["allowed_mentions"] = {"roles": [PING_ROLE_ID]}
     while True:
         r = requests.post(WEBHOOK_URL + "?wait=true", json=payload, timeout=20)
         if r.status_code == 429:
@@ -179,8 +183,8 @@ def main():
 
     # YouTube
     try:
-        if not state["channel_id"]:
-            state["channel_id"] = youtube_channel_id()
+        if not state.get("channel_id"):
+            state["channel_id"] = os.environ.get("YOUTUBE_CHANNEL_ID", "") or youtube_channel_id()
         vids = youtube_videos(state["channel_id"])
         seen = set(state["videos"])
         new = [v for v in vids if v[0] not in seen]
