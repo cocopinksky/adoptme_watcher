@@ -1,9 +1,10 @@
 name: Adopt Me watcher
 
 on:
-  schedule:
-    - cron: "3-58/5 14-19 * * *"
-    - cron: "7,37 0-13,20-23 * * *"
+    schedule:
+    - cron: "55-59 15 * * *"
+    - cron: "0-10 16 * * *"
+    - cron: "7,37 * * * *"
   workflow_dispatch:
 
 permissions:
