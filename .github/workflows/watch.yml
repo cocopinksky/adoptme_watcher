@@ -1,7 +1,7 @@
 name: Adopt Me watcher
 
 on:
-    schedule:
+  schedule:
     - cron: "55-59 15 * * *"
     - cron: "0-10 16 * * *"
     - cron: "7,37 * * * *"
@@ -30,6 +30,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           YOUTUBE_CHANNEL_ID: UCVdPM7Dgxm3cHXM2ro__bUg
+          PING_ROLE_ID: "1554152500771164201"
         run: python adoptme_watcher.py
 
       - name: Save state
